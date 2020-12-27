@@ -76,12 +76,12 @@ def extract_mail(imap, mailbox):
 
 def create_csv():
     print("Creating excel file...")
-    with open('emails.csv', 'w', newline='') as file:
+    with open('/tmp/emails.csv', 'w', newline='') as file:
         writer = csv.writer(file)
         writer.writerow(["Email ID", "FROM", "SUBJECT", "DATE"])
 
 def append_to_csv(email_ids, email_from, email_subject, email_date):
-    with open('emails.csv', 'a', newline='') as file:
+    with open('/tmp/emails.csv', 'a', newline='') as file:
         writer = csv.writer(file)
         writer.writerow([email_ids, email_from, email_subject, email_date])
 
@@ -90,11 +90,11 @@ def return_last_row(imap):
 
 def sort_csv():
     #sort data fram by Email ID
-    data_frame = pd.read_csv("emails.csv")
+    data_frame = pd.read_csv("/tmp/emails.csv")
     data_frame.sort_values(by=['Email ID'], inplace=True)
 
     #print(data_frame)
-    data_frame.to_csv("emails.csv", index=False)
+    data_frame.to_csv("/tmp/emails.csv", index=False)
     print("File sorted by Email ID")
 
 
@@ -141,7 +141,7 @@ def update_insert(imap, starting_id, latest_email_id):
 
 def upload_to_s3():
     try:
-        response = s3_client.upload_file("emails.csv", "email-extractor-s3bucket-19hubkrk3mpul", "emails.csv")
+        response = s3_client.upload_file("/tmp/emails.csv", s3_bucket, "emails.csv")
     except Exception as e:
         print(f"Unable to upload to s3, ERROR: {e}")
         return False
