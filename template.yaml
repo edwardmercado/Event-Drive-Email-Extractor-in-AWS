@@ -1,0 +1,94 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  email-extractor
+
+  Sample SAM Template for email-extractor
+
+Globals:
+  Function:
+    Timeout: 3
+    Environment:
+      Variables:
+        S3_BUCKET: !Ref S3Bucket
+
+Resources:
+  EmailExtractFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: email_extract/
+      Handler: app.lambda_handler
+      Runtime: python3.7
+      Timeout: 600
+      MemorySize: 256
+      Role: !GetAtt LamdaRole.Arn
+
+  LamdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - lambda.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      Path: "/"
+      Policies:
+      - PolicyName: root
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action:
+            - logs:*
+            Resource: arn:aws:logs:*:*:*
+      - PolicyName: SNSActions
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+              - sns:*
+              Resource: '*'
+      - PolicyName: S3Actions
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+              - s3:*
+              Resource: '*'
+      - PolicyName: ParameterStoreActions
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+              - ssm:*
+              Resource: '*'
+
+
+  ScheduledRule:
+    Type: AWS::Events::Rule
+    Properties:
+      ScheduleExpression: "rate(12 hours)"
+      State: "DISABLED"
+      Targets:
+      -
+        Arn: !GetAtt EmailExtractFunction.Arn
+        Id: EmailExtractFunction
+
+  RulePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !GetAtt EmailExtractFunction.Arn
+      Action: lambda:InvokeFunction
+      Principal: events.amazonaws.com
+      SourceArn: !GetAtt ScheduledRule.Arn
+
+  S3Bucket:
+    Type: AWS::S3::Bucket
+
