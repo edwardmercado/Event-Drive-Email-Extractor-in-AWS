@@ -75,7 +75,7 @@ Resources:
     Type: AWS::Events::Rule
     Properties:
       ScheduleExpression: "rate(12 hours)"
-      State: "DISABLED"
+      State: "ENABLED"
       Targets:
       -
         Arn: !GetAtt EmailExtractFunction.Arn
