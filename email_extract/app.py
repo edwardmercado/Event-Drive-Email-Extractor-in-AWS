@@ -8,6 +8,8 @@ import csv, os
 imap_url = 'imap.gmail.com'
 email_mailbox = "INBOX"
 s3_bucket = os.environ['S3_BUCKET']
+email_username = os.environ['EMAIL_USERNAME']
+email_password = os.environ['EMAIL_PWD']
 
 s3_resource = boto3.resource('s3')
 s3_client = boto3.client('s3')
@@ -17,11 +19,11 @@ ssm_client = boto3.client('ssm')
 def lambda_handler(event, context):
 
     #get email and username from SSM Parameter Store
-    email_username_parameter = ssm_client.get_parameter(Name='/email-extractor/email/email-username')
-    email_password_parameter = ssm_client.get_parameter(Name='/email-extractor/email/email-password', WithDecryption=True)
+    # email_username_parameter = ssm_client.get_parameter(Name='/email-extractor/email/email-username')
+    # email_password_parameter = ssm_client.get_parameter(Name='/email-extractor/email/email-password', WithDecryption=True)
     
-    email_username = email_username_parameter['Parameter']['Value']
-    email_password = email_password_parameter['Parameter']['Value']
+    # email_username = email_username_parameter['Parameter']['Value']
+    # email_password = email_password_parameter['Parameter']['Value']
 
     is_login(email_username, email_password)
 
