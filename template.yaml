@@ -11,8 +11,36 @@ Globals:
     Environment:
       Variables:
         S3_BUCKET: !Ref S3Bucket
+        EMAIL_USERNAME: !GetAtt ParameterStoreEmailUsername.Value
+        EMAIL_PWD: !GetAtt ParameterStoreEmailPassword.Value
+
+Parameters:
+  EmailUsername:
+    Type: String
+    Description: Your gmail from where we're gonna extract your emails.
+    AllowedPattern: .+\@.+\..+
+  
+  EmailPassword:
+    Type: String
+    Description: Your generated password from your gmail account that is meant for Desktop Applications
+    NoEcho: true
 
 Resources:
+
+  ParameterStoreEmailUsername:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Type: String
+      Tier: Standard
+      Value: !Ref EmailUsername
+
+  ParameterStoreEmailPassword:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Type: String
+      Tier: Standard
+      Value: !Ref EmailPassword
+
   EmailExtractFunction:
     Type: AWS::Serverless::Function
     Properties:
