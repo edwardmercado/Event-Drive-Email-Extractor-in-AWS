@@ -1,4 +1,4 @@
-<img src="diagrams/AWS and Gmail.png" align = "center"/>
+<img src="./diagrams/AWS and Gmail.png" style="display:block; margin-left: auto; margin-right:auto; width: 80%;"/>
 
 <br/>
 <br/>
