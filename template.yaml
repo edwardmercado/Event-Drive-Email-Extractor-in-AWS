@@ -12,7 +12,25 @@ Globals:
       Variables:
         S3_BUCKET: !Ref S3Bucket
 
+# Parameters:
+#   EmailUsername:
+#     Type: String
+#     Description: Your gmail from where we're gonna extract your emails.
+#     AllowedPattern: /[^\s@]+@[^\s@]+\.[^\s@]+/
+  
+  # EmailPassword:
+  #   Type: String
+  #   Description: Your generated password from your gmail account that is meant for Desktop Applications
+  #   NoEcho: true
+
 Resources:
+
+  # ParameterStoreEmailUsername:
+  #   Type: AWS::SSM::Parameter
+  #   Properties:
+  #     Type: String
+  #     Tier: Standard
+
   EmailExtractFunction:
     Type: AWS::Serverless::Function
     Properties:
