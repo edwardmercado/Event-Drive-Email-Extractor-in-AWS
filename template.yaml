@@ -11,8 +11,8 @@ Globals:
     Environment:
       Variables:
         S3_BUCKET: !Ref S3Bucket
-        EMAIL_USERNAME: !GetAtt ParameterStoreEmailUsername.Value
-        EMAIL_PWD: !GetAtt ParameterStoreEmailPassword.Value
+        SSM_EMAIL_USERNAME: !Ref ParameterStoreEmailUsername
+        SSM_EMAIL_PWD: !Ref ParameterStoreEmailPassword
 
 Parameters:
   EmailUsername:
